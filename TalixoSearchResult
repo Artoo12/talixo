@@ -1,0 +1,84 @@
+import org.junit.Assert;
+import org.junit.Test;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.concurrent.TimeUnit;
+
+public class TalixoSearchResult {
+    @Test
+    public void talixoSearchResultVerify() {
+
+
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("https://talixo.com/");
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        WebDriverWait WebDriverWait = new WebDriverWait(driver, 10);
+
+        //Putting "Balice" text into pickup search field than pushing DOWN and ENTER keys
+        WebElement searchFieldPickUp = driver.findElement(By.id("id_start_point_NEW"));
+        searchFieldPickUp.sendKeys("Balice");
+        WebElement waitForResultPickUp = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='start_point-autocomplete']/li[2]/span[@class='result-text']")));
+        assertTrue("Link is not displayed", waitForResultPickUp.isDisplayed());
+        searchFieldPickUp.sendKeys(Keys.DOWN);
+        searchFieldPickUp.sendKeys(Keys.RETURN);
+
+        //Putting "No" text into destination search field than pushing DOWN and ENTER keys
+        WebElement waitForFlightNumber = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("id_flight_number")));
+        assertTrue("Link is not displayed", waitForFlightNumber.isDisplayed());
+        WebElement searchFieldFlightNumber = driver.findElement(By.id("id_flight_number"));
+        searchFieldFlightNumber.sendKeys("No");
+        searchFieldFlightNumber.sendKeys(Keys.DOWN);
+        searchFieldFlightNumber.sendKeys(Keys.RETURN);
+
+        //Putting "Długa 5" text into pickup destination field than pushing DOWN and ENTER keys
+        WebElement searchFieldDestination = driver.findElement(By.id("id_end_point_NEW"));
+        searchFieldDestination.sendKeys("Długa 5");
+        WebElement waitForResultDestination = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//ul[@id='end_point-autocomplete']/li[2]/span[@class='result-text']")));
+        assertTrue("Link is not displayed", waitForResultDestination.isDisplayed());
+        searchFieldDestination.sendKeys(Keys.DOWN);
+        searchFieldDestination.sendKeys(Keys.RETURN);
+
+        //Pushing Start Booking button
+        WebElement startBooking=driver.findElement(By.xpath("//input[@value='Start booking']"));
+        JavascriptExecutor executeStartBooking=(JavascriptExecutor)driver;
+        executeStartBooking.executeScript("arguments[0].click()", startBooking);
+
+        //Waiting for update/change details button appears than clicking update / change details button
+        WebElement waitForUpdateButton = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"booking-what\"]/div[3]/div[2]/div/div[1]/label/div/span[3]")));
+        assertTrue("Link is not displayed", waitForUpdateButton.isDisplayed());
+        WebElement changeDetails =driver.findElement(By.xpath("//*[@id=\"booking-what\"]/div[3]/div[2]/div/div[1]/label/div/span[3]"));
+        JavascriptExecutor executeClickDetails =(JavascriptExecutor)driver;
+        executeClickDetails.executeScript("arguments[0].click()", changeDetails);
+
+        //Waiting to load "Your booking" content than verify if "Krakow-Balice" search is visible in result and printing out result full result of searching
+        WebElement waitForPickUpDetails = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"booking-what\"]/div[3]/div[2]/div/div[1]/div[2]/div/div/div[1]/table/tbody/tr[1]/td")));
+        assertTrue("Link is not displayed", waitForPickUpDetails.isDisplayed());
+        String textPickUp = driver.findElement(By.xpath("//*[@id=\"booking-what\"]/div[3]/div[2]/div/div[1]/div[2]/div/div/div[1]/table/tbody/tr[1]/td")).getText();
+        Assert.assertTrue("Text not found!", textPickUp.contains("Krakow-Balice"));
+        System.out.println("result:  " + textPickUp);
+
+        //Waiting load "You booking details" content than verify if "Długa 5" search is visible in result and printing out result full result of searching
+        WebElement waitForDestinationDetails = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"booking-what\"]/div[3]/div[2]/div/div[1]/label/div/span[2]/span[3]")));
+        assertTrue("Link is not displayed", waitForDestinationDetails.isDisplayed());
+        String textDirection = driver.findElement(By.xpath("//*[@id=\"booking-what\"]/div[3]/div[2]/div/div[1]/label/div/span[2]/span[3]")).getText();
+        Assert.assertTrue(  "Text not found!", textDirection.contains("Długa 5"));
+        System.out.println("\nresult:  " + textDirection);
+
+        driver.quit();
+
+
+
+    }
+
+    private void assertTrue(String link_is_not_displayed, boolean displayed) {
+
+    }
+}
