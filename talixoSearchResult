@@ -4,8 +4,8 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.util.concurrent.TimeUnit;
+import static junit.framework.TestCase.assertTrue;
 
 public class TalixoSearchResult {
     @Test
@@ -78,7 +78,5 @@ public class TalixoSearchResult {
 
     }
 
-    private void assertTrue(String link_is_not_displayed, boolean displayed) {
-
-    }
+   
 }
