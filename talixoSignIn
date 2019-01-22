@@ -1,0 +1,50 @@
+import org.junit.Assert;
+import org.junit.Test;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.util.concurrent.TimeUnit;
+
+
+   public class TalixoSearchResult {
+    @Test
+    public void talixoSignInVerify() {
+
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+
+        WebDriver driver = new ChromeDriver();
+
+        driver.get("https://talixo.com/");
+
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+        WebDriverWait WebDriverWait = new WebDriverWait(driver, 10);
+
+        WebElement waitForSignIn = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"landing\"]/div[3]/div[1]/div[1]/ul/li[2]/a")));
+        WebElement signIn = driver.findElement(By.xpath("//*[@id=\"landing\"]/div[3]/div[1]/div[1]/ul/li[2]/a"));
+        assertTrue("Link is not displayed", waitForSignIn.isDisplayed());
+        JavascriptExecutor executeStartBooking = (JavascriptExecutor) driver;
+        executeStartBooking.executeScript("arguments[0].click()", signIn);
+
+        WebElement waitForEmail = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("id_email_auth")));
+        assertTrue("Link is not displayed", waitForEmail.isDisplayed());
+        WebElement searchFieldEmail= driver.findElement(By.id("id_email_auth"));
+        searchFieldEmail.sendKeys("nuzuxuwug@next2cloud.info");
+
+        WebElement waitForPassword = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("id_password")));
+        assertTrue("Link is not displayed", waitForPassword.isDisplayed());
+        WebElement searchFieldPassword = driver.findElement(By.id("id_password"));
+        searchFieldPassword.sendKeys("testing122");
+        searchFieldPassword.submit();
+
+        WebElement waitForLoggedInDetails = WebDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"landing\"]/div[3]/div[1]/div/ul/li[2]/span")));
+        assertTrue("Link is not displayed", waitForLoggedInDetails.isDisplayed());
+        System.out.println("Sucessfull login");
+
+        driver.quit();
+
+
+
+    }
+}
